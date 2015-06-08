@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="css/reveal.min.css">
-    <link rel="stylesheet" href="css/theme/blue.css" id="theme">
+    <link rel="stylesheet" href="css/theme/moon.css" id="theme">
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
 
@@ -35,18 +35,17 @@
     <div class="reveal">
         <!-- Any section element inside of this container is displayed as a slide -->
         <div class="slides">    
-            <section data-state="bgGreen">
-                <h3>Seminário sobre BigData</h3>
-                    <img src="images/hbase_logo.png">
-                <p>
+            <section data-background="images/hbase_logo.png" data-background-size="auto" data-background-color="#fff">
+                    <h2>
+                    <font color='#B50014' class="fragment"> Seminário BigData
+                    </h2>
+                    <br><br><br><br><br><br><br><br><br><br><br><br>
+                    <p>
                     <small>Criado por <a href="mailto:rafael.dick@acad.pucrs.br">Rafael Dick</a>
-						, <a href="mailto:raphael.silva.001@acad.pucrs.br">Raphael Rodrigues</a>
+                        , <a href="mailto:raphael.silva.001@acad.pucrs.br">Raphael Rodrigues</a>
                         e <a href="mailto:tialles.zerwes@acad.pucrs.br">Tialles Zerwes</a>
-                    </small>
+                    </small></font>
                 </p>
-                <aside class="notes">
-                    
-                </aside>
             </section>
             <section>
                 <section>
@@ -87,10 +86,13 @@
 					<li style="text-align: justify;" /> Escrito em Java.
                 </section>
             </section>
-                <section>
-                    <h2>Hadoop e HBase</h2>
-                    <img src="images/hadoopXhbase.png">
-                </section>
+                <section data-background="images/hadoopXhbase.png" data-background-size="auto" data-background-color="#fff">
+                    <h2>
+                    <font color='#000'>  Hadoop E HBase</font>
+                    </h2>
+                    <br><br><br><br><br><br><br><br><br><br><br><br>
+                    <font color='#000' size="4"> HDFS - Hadoop Distributed File System</font>
+                    </section>
             <section>
                 <section>
                     <h3>Modelo de Dados da Tabela</h3>
@@ -119,36 +121,167 @@ RegionServers incluem um memstore para armazenar em cache linhas freqüentemente
                 </section>
             </section>
             <section>
+                <section>
                     <h1>Scripts</h1>
-                    
+                    <h4>HBase - Java API</h4>
+                </section>
+                <section>
+                    <h3>Criando uma tabela</h3>
+                <pre>
+                    <code class="javascript" data-trim contenteditable >
+public class CreateTable {
+   public static void main(String[] args) throws IOException {
+      // Instantiating configuration class
+      Configuration con = HBaseConfiguration.create();
+      // Instantiating HbaseAdmin class
+      HBaseAdmin admin = new HBaseAdmin(con);
+      // Instantiating table descriptor class
+      HTableDescriptor tableDescriptor = new
+      TableDescriptor(TableName.valueOf("emp"));
+      // Adding column families to table descriptor
+      tableDescriptor.addFamily(new HColumnDescriptor("personal"));
+      tableDescriptor.addFamily(new HColumnDescriptor("professional"));
+      // Execute the table through admin
+      admin.createTable(tableDescriptor);
+   }
+}
+                    </code>
+                </pre>
+                <h4>Exemplo</h4>
+                <img src="images/table.png">
+                </section>
+                <section>
+                    <h3>Inserindo Dados</h3>
+                <pre>
+                    <code class="javascript" data-trim contenteditable >
+public class InsertData{
+   public static void main(String[] args) throws IOException {
+      // Instantiating Configuration class and Instantiating HTable class
+      Configuration config = HBaseConfiguration.create();
+      HTable hTable = new HTable(config, "emp");
+      // Instantiating Put class accepts a row name.
+      Put p = new Put(Bytes.toBytes("row1")); 
+      // add values using add() method
+      // accepts column family name, qualifier/row name ,value
+      p.add(Bytes.toBytes("personal"),Bytes.toBytes("name"),Bytes.toBytes("raju"));
+      p.add(Bytes.toBytes("personal"),p.add(Bytes.toBytes("professional"),
+      Bytes.toBytes("manager"));
+      // Saving the put Instance to the HTable and closing HTable
+      hTable.put(p);
+      hTable.close();
+   }
+}
+                    </code>
+                </pre>
+                </section>
+                <section>
+                    <h3>Alterando Dados</h3>
+                <pre>
+                    <code class="javascript" data-trim contenteditable >
+public class InsertData{
+   public static void main(String[] args) throws IOException {
+      // Instantiating Configuration class and Instantiating HTable class
+      Configuration config = HBaseConfiguration.create();
+      HTable hTable = new HTable(config, "emp");
+      // Instantiating Put class accepts a row name.
+      Put p = new Put(Bytes.toBytes("row1")); 
+      // Updating a cell value
+      p.add(Bytes.toBytes("personal"),
+      Bytes.toBytes("city"),Bytes.toBytes("Delih"));
+      // Saving the put Instance to the HTable and closing HTable
+      hTable.put(p);
+      hTable.close();
+   }
+}
+                    </code>
+                </pre>
+                </section>
+                <section>
+                    <h3>Lendo Dados</h3>
+                <pre>
+                    <code class="javascript" data-trim contenteditable >
+public class InsertData{
+   public static void main(String[] args) throws IOException {
+      // Instantiating Configuration class and Instantiating HTable class
+      Configuration config = HBaseConfiguration.create();
+      HTable hTable = new HTable(config, "emp");
+      // Instantiating Get class
+      Get g = new Get(Bytes.toBytes("row1"));
+      // Reading the data
+      Result result = table.get(g);
+      // Reading values from Result class object
+      byte [] value = result.getValue(Bytes.toBytes("personal"),
+      Bytes.toBytes("name"));
+      byte [] value1 = result.getValue(Bytes.toBytes("personal"),
+      Bytes.toBytes("city"));
+   }
+}
+                    </code>
+                </pre>
+                </section>
+                <section>
+                    <h3>Deletando Dados</h3>
+                <pre>
+                    <code class="javascript" data-trim contenteditable >
+public class InsertData{
+   public static void main(String[] args) throws IOException {
+      // Instantiating Configuration class and Instantiating HTable class
+      Configuration config = HBaseConfiguration.create();
+      HTable hTable = new HTable(config, "emp");
+      // Instantiating Delete class
+      Delete delete = new Delete(Bytes.toBytes("row1"));
+      delete.deleteColumn(Bytes.toBytes("personal"), Bytes.toBytes("name"));
+      delete.deleteFamily(Bytes.toBytes("professional"));
+      // deleting the data
+      table.delete(delete);
+      // closing the HTable object
+      table.close();
+   }
+}
+                    </code>
+                </pre>
+                </section>
             </section>
             <section>
-                    <h1>Case com o Facebook</h1>
+                    <section>
+                        <h2>Case com o Facebook</h2>
+                        <a href="https://www.facebook.com/UsingHbase" target="_blank"> HBase at Facebook </a><br>
+                        
+                    </section>
+                    <section>
+                        <p />Atualmente todo armazenamento de mensagens no Facebook é feito utilizando o HBase.
+                        <img src="images/hbaseFacebook.png">
+                    </section>
+                    <section data-background="images/dadosFacebook.png" data-background-size="auto" data-background-color="#fff">
+                    </section>
+                    <section data-background="images/arquiteturaFace.png" data-background-size="auto" data-background-color="rgba(230, 234, 241, 1)">
+                    </section>
+                    
             </section>
             <section>
                 <section>
                     <h3>Resumo HBase</h3>
-                    <li style="text-align: justify;" /> Orientação: Colunas;
-                    <li style="text-align: justify;" /> Criação: O HBase foi criado no Powerset em 2007 e então doado para o Apache;
-                    <li style="text-align: justify;" /> Linguagem de Implementação: Java;
-                    <li style="text-align: justify;" /> Armazenamento: O HBase fornece capacidades parecidas com as do Bigtable no Hadoop File System;
-                    <li style="text-align: justify;" /> Open source: Sim, licença Apache;
-                    <li style="text-align: justify;" /> Uso de Produção: HBase tem sido usado na Adobe desde 2008. Também foi usado no Twitter, Mahalo, StumbleUpon, Ning, Hulu, World Lingo,
-Indonesia-based Detikcom e no Yahoo!;
-                    <li style="text-align: justify;" /> Recursos Adicionais: Como o HBase é parte do projeto Hadoop, ele tem uma forte integração com o Hadoop. Existe um conjunto de classes de
-conveniência que permite que você execute facilmente trabalhos MapReduce usando o HBase para um background de armazenamento de dados.
+                    <p style="text-align: justify; font-size: smaller" /> Orientação: Colunas;
+                    <p style="text-align: justify; font-size: smaller" /> Criação: O HBase foi criado no Powerset em 2007 e então doado para o Apache;
+                    <p style="text-align: justify; font-size: smaller" /> Linguagem de Implementação: Java;
+                    <p style="text-align: justify; font-size: smaller" /> Armazenamento: O HBase fornece capacidades parecidas com as do Bigtable no Hadoop File System;
+                    <p style="text-align: justify; font-size: smaller" /> Open source: Sim, licença Apache;
+                    <p style="text-align: justify; font-size: smaller" /> Uso de Produção: HBase tem sido usado na Adobe desde 2008. Também foi usado no Facebook, Twitter, , World Lingo e no Yahoo!;
+                    <p style="text-align: justify; font-size: smaller" /> Recursos Adicionais: Como o HBase é parte do projeto Hadoop, ele tem uma forte integração com o Hadoop. Existe um conjunto de classes de conveniência que permite que você execute facilmente trabalhos MapReduce.
                 </section>
             </section>
             <section>
-                <section>
-                    <h3>Referências </h3><br>
-                    <a href="http://hbase.apache.org/"> Apache HBase </a>
-                    <a href="http://imasters.com.br/artigo/22216/banco-de-dados/os-bancos-de-dados-nosql-uma-olhada-no-hbase/?doing_wp_cron=1433763506.2061619758605957031250"> Artigo imaster </a>
-                    <a href="http://br.hortonworks.com/hadoop/hbase/"> Hortonworks </a> 
-                    <a href="http://www.tutorialspoint.com/hbase/hbase_quick_guide.htm"> Tutorials Point </a> 
-                    
-                    
-                </section>
+                <h3>Livros </h3>
+                <a href="http://shop.oreilly.com/product/0636920014348.do"><img src="images/hbaseguia.jpg"></a>
+                <a href="https://www.packtpub.com/big-data-and-business-intelligence/hbase-essentials"><img src="images/hBaseEssentials.jpg"></a>
+            </section>
+            <section>
+                <h3>Referências </h3>
+                <a href="http://hbase.apache.org/"> Apache HBase </a><br>
+                <a href="http://imasters.com.br/artigo/22216/banco-de-dados/os-bancos-de-dados-nosql-uma-olhada-no-hbase/?doing_wp_cron=1433763506.2061619758605957031250"> Artigo imaster </a><br>
+                <a href="http://br.hortonworks.com/hadoop/hbase/"> Hortonworks </a> <br>
+                <a href="http://www.tutorialspoint.com/hbase/hbase_quick_guide.htm"> Tutorials Point </a><br>
+                <a href="http://bigdatabrazil.blogspot.com.br/2014/03/utilizando-o-hbase.html"> Big Data Brazil </a><br>
             </section>
         </div>
     </div>
